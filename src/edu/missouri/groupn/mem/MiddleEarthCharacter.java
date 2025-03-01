@@ -17,6 +17,16 @@ public class MiddleEarthCharacter {
 		this.health = health;
 		this.power = power;
 	}
+	
+	/**
+	 * displayInfo():
+	 * This method prints character details.
+	 */
+	public void displayInfo() {
+		System.out.println("Name: " + this.name + " | Health: " + this.health + " | Power: " + this.power);
+//		System.out.println("Health: " + this.health);
+//		System.out.println("Power: " + this.power);
+	}
 
 	@Override
 	public String toString() {
