@@ -1,4 +1,4 @@
-package edu.missouri.groupn.mem;
+package edu.missouri.groupn.mem.characters;
 
 public abstract class MiddleEarthCharacter {
 	public String name;

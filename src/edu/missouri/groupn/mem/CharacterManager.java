@@ -1,6 +1,6 @@
-package edu.missouri.groupn.mem.characters;
+package edu.missouri.groupn.mem;
 
-import edu.missouri.groupn.mem.MiddleEarthCharacter;
+import edu.missouri.groupn.mem.characters.MiddleEarthCharacter;
 
 public class CharacterManager {
 	public MiddleEarthCharacter[] characters = new MiddleEarthCharacter[5];
@@ -36,13 +36,61 @@ public class CharacterManager {
 		System.out.println("\nSearching for " + name + "...");
 		
 		for (int i=0; i<this.size; i++) {
-			if (this.characters[i].name.equalsIgnoreCase(name)) {
+			if (this.characters[i].getName().equalsIgnoreCase(name)) {
 				System.out.println("Found " + name + " in the system!");
 				return this.characters[i];
 			}
 		}
 		System.out.print("No characters named " + name + " were found in the system.\n");
 		return null;
+	}
+	
+	/**
+	 * updateCharacter():
+	 * This method updates a given character with the passed argument values.
+	 * @param character Character to be updated
+	 * @param name Character name
+	 * @param health Character health level 
+	 * @param power Character power level
+	 * @return True upon successful change, returns False if there is no change or if the character does not exist
+	 */
+	public boolean updateCharacter(MiddleEarthCharacter character, String name, int health, int power) {
+		// search character management system for the given character
+		for (int i=0; i<this.size; i++) {
+			if (this.characters[i].equals(character)) {
+				// variable to compare argument values to those already stored for the character
+				// if unique, update character with the new value
+				var uniqueVal = false; 
+				
+				// check for unique name
+				if (!(this.characters[i].getName().equalsIgnoreCase(name))) {
+					uniqueVal = true;
+					this.characters[i].setName(name);
+				}
+				// check for unique health level
+				if (this.characters[i].getHealth() != health) {
+					uniqueVal = true;
+					this.characters[i].setHealth(health);
+				}
+				// check for unique power level
+				if (this.characters[i].getPower() != power) {
+					uniqueVal = true;
+					this.characters[i].setPower(power);
+				}
+				
+				// check uniqueVal
+				if (uniqueVal == true) {
+					return true;
+				}
+				else {
+					System.out.println("There is nothing to change or update for " + this.characters[i].getName());
+					System.out.println("Try again with different arguments for name, health, or power.\n");
+					return false;
+				}
+			}
+		}
+		System.out.print(character + "was not found in the system. Try again with a valid character.\n");
+		return false;
 	}
 	
 	/**
