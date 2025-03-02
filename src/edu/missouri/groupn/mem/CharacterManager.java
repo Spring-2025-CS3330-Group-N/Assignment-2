@@ -80,6 +80,9 @@ public class CharacterManager {
 				
 				// check uniqueVal
 				if (uniqueVal == true) {
+					System.out.println("Update successful! See new character stats below.");
+					this.characters[i].displayInfo();
+					System.out.println("\n");
 					return true;
 				}
 				else {
@@ -89,7 +92,7 @@ public class CharacterManager {
 				}
 			}
 		}
-		System.out.print(character + "was not found in the system. Try again with a valid character.\n");
+		System.out.print(character + " was not found. You must add characters to the system before you can update them.\n");
 		return false;
 	}
 	
