@@ -11,8 +11,7 @@ public class Orc extends MiddleEarthCharacter {
 
 	@Override
 	public String getRace() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.getClass().getSimpleName();
 	}
 
 	@Override
