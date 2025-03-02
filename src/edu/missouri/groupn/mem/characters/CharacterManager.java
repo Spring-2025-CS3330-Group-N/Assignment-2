@@ -33,12 +33,38 @@ public class CharacterManager {
 	 * @return the requested MiddleEarthCharacter upon success, otherwise return null
 	 */
 	public MiddleEarthCharacter getCharacter(String name) {
+		System.out.println("\nSearching for " + name + "...");
+		
 		for (int i=0; i<this.size; i++) {
-			if (this.characters[i].name.equalsIgnoreCase(name))
+			if (this.characters[i].name.equalsIgnoreCase(name)) {
 				System.out.println("Found " + name + " in the system!");
 				return this.characters[i];
+			}
 		}
-		System.out.print("No characters named " + name + " were found in the system.");
+		System.out.print("No characters named " + name + " were found in the system.\n");
 		return null;
+	}
+	
+	/**
+	 * displayAllCharacters():
+	 * This method displays information for all characters in the management system.
+	 */
+	public void displayAllCharacters() {
+		if (this.size == 0) {
+			System.out.println("\nThe character management system is empty! Add character(s) and try again.\n");
+			return;
+		}
+		
+		// adjust grammar based on how many characters are in the system
+		if (this.size == 1) {
+			System.out.print("\nThere is currently " + this.size + " character in the system.\n");
+		}
+		else {
+			System.out.println("\nThere are currently " + this.size + " characters in the system:\n");
+			}
+		// print character(s)
+		for (int i=0; i<this.size; i++) {
+			this.characters[i].displayInfo();
+		}
 	}
 }
