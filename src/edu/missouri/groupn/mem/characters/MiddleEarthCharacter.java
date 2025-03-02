@@ -1,9 +1,9 @@
 package edu.missouri.groupn.mem.characters;
 
 public abstract class MiddleEarthCharacter {
-	public String name;
-	public double health;
-	public double power;
+	protected String name;
+	protected double health;
+	protected double power;
 	
 	/**
 	 * Parameterized constructor:
