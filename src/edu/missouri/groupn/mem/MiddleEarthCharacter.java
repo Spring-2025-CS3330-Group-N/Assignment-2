@@ -32,5 +32,59 @@ public class MiddleEarthCharacter {
 	public String toString() {
 		return "MiddleEarthCharacter [name=" + name + ", health=" + health + ", power=" + power + "]";
 	}
+
+	/**
+	 * getName():
+	 * This getter method returns the name of the character it's called upon.
+	 * @return Character's name
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * setName():
+	 * This setter method updates the name of the character it's called upon using the passed argument.
+	 * @param name Name to be set for character
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	/**
+	 * getHealth():
+	 * This getter method returns the health level of the character it's called upon.
+	 * @return Character's health level
+	 */
+	public double getHealth() {
+		return health;
+	}
+
+	/**
+	 * setHealth():
+	 * This setter method updates the health level of the character it's called upon using the passed argument.
+	 * @param health Health level to be set for character
+	 */
+	public void setHealth(double health) {
+		this.health = health;
+	}
+
+	/**
+	 * getPower():
+	 * This getter method returns the power level of the character it's called upon.
+	 * @return Character's power level
+	 */
+	public double getPower() {
+		return power;
+	}
+
+	/**
+	 * setPower():
+	 * This setter method updates the power level of the character it's called upon using the passed argument.
+	 * @param power Power level to be set for character
+	 */
+	public void setPower(double power) {
+		this.power = power;
+	}
 	
 }
