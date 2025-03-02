@@ -1,6 +1,6 @@
 package edu.missouri.groupn.mem;
 
-public class MiddleEarthCharacter {
+public abstract class MiddleEarthCharacter {
 	public String name;
 	public double health;
 	public double power;
@@ -20,13 +20,29 @@ public class MiddleEarthCharacter {
 	
 	/**
 	 * displayInfo():
-	 * This method prints character details.
+	 * This method prints character details (name, health, and power).
 	 */
 	public void displayInfo() {
 		System.out.println("Name: " + this.name + " | Health: " + this.health + " | Power: " + this.power);
 //		System.out.println("Health: " + this.health);
 //		System.out.println("Power: " + this.power);
 	}
+	
+	/**
+	 * getRace():
+	 * This method will return the race of the character it's called upon.
+	 * Since this is an abstract method, it will be implemented in each of the character subclasses.
+	 * @return
+	 */
+	public abstract String getRace();
+	
+	/**
+	 * attack():
+	 * This method will use the character it's called upon to attack the character passed in as an argument.
+	 * It will update the target's health level accordingly to reflect the amount of damage inflicted.
+	 * Since this is an abstract method, it will be implemented in each of the character subclasses.
+	 */
+	public abstract boolean attack(MiddleEarthCharacter target);
 
 	@Override
 	public String toString() {
