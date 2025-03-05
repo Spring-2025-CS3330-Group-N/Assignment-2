@@ -26,5 +26,8 @@ public class MiddleEarthApp {
 		var dwarf = new Dwarf("grumpy", 10, 1);
 
 		System.out.println(wizard.getHealth());
+		
+		var simulation = new CombatSimulation();
+		simulation.run();
 	}
 }

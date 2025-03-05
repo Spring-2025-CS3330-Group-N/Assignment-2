@@ -1,6 +1,6 @@
-package edu.missouri.groupn.mem;
+package edu.missouri.groupn.mem.ui;
 
-import java.util.Scanner;
+import edu.missouri.groupn.mem.ArrayList;
 
 public class Menu {
 	private String prompt;
@@ -23,21 +23,24 @@ public class Menu {
 			System.out.println((i + 1) + ": " + name);
 		}
 		
-		var scanner = new Scanner(System.in);
-		int selection;
-		while (true) {
-			System.out.print("Enter a number from " + 1 + " to " + (options.getSize() + 1) + ": ");
-			var line = scanner.nextLine();
-			try {
-				selection = Integer.parseInt(line) - 1;
-			} catch (NumberFormatException e) {
-				continue;
+		var prompt = "Enter a number from " + 1 + " to " + (options.getSize() + 1) + ": ";
+		var prompter = new Prompter(prompt, new Validator() {
+			@Override
+			public Object validate(String line) {
+				int selection;
+				try {
+					selection = Integer.parseInt(line) - 1;
+				} catch (NumberFormatException e) {
+					return null;
+				}
+				if (0 > selection || selection >= options.getSize()) {
+					return null;
+				}
+				return selection;
 			}
-			if (0 <= selection && selection < this.options.getSize()) {
-				break;
-			}
-		}
+		});
 		
+		var selection = (int) prompter.prompt();
 		var option = (Object[]) this.options.at(selection);
 		return option[1];
 	}
