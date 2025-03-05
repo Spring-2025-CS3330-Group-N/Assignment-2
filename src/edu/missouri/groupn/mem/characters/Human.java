@@ -1,5 +1,7 @@
 package edu.missouri.groupn.mem.characters;
 
+import edu.missouri.groupn.mem.CombatSystem;
+
 public class Human extends MiddleEarthCharacter {
 
 	public Human(String name, double health, double power) {
@@ -14,8 +16,11 @@ public class Human extends MiddleEarthCharacter {
 
 	@Override
 	public boolean attack(MiddleEarthCharacter target) {
-		// TODO Auto-generated method stub
-		return false;
+		var multiplier = CombatSystem.getInstance().getDamageMultiplier(this.getClass(), target.getClass());
+		var damage = multiplier * this.power;
+		target.setHealth(target.getHealth() - damage);
+
+		return damage > 0;
 	}
 
 }
