@@ -23,18 +23,22 @@ public class Menu {
 			System.out.println((i + 1) + ": " + name);
 		}
 		
-		var prompt = "Enter a number from " + 1 + " to " + (options.getSize() + 1) + ": ";
+		if (options.getSize() == 0) {
+			return null;
+		}
+		
+		var prompt = "Enter a number from " + 1 + " to " + options.getSize() + ": ";
 		var prompter = new Prompter(prompt, new Validator() {
 			@Override
-			public Object validate(String line) {
+			public Object validate(String line, Object invalid) {
 				int selection;
 				try {
 					selection = Integer.parseInt(line) - 1;
 				} catch (NumberFormatException e) {
-					return null;
+					return invalid;
 				}
 				if (0 > selection || selection >= options.getSize()) {
-					return null;
+					return invalid;
 				}
 				return selection;
 			}

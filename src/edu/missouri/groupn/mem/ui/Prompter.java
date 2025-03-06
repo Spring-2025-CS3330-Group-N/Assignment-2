@@ -5,6 +5,7 @@ import java.util.Scanner;
 public class Prompter {
 	String prompt;
 	Validator validator;
+	Object invalid;
 
 	public Prompter(String prompt, Validator validator) {
 		this.prompt = prompt;
@@ -17,8 +18,8 @@ public class Prompter {
 		while (true) {
 			System.out.print(this.prompt);
 			var line = scanner.nextLine();
-			var validated = this.validator.validate(line);
-			if (validated != null) {
+			var validated = this.validator.validate(line, invalid);
+			if (validated != invalid) {
 				return validated;
 			}
 		}
