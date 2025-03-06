@@ -31,7 +31,10 @@ public class CombatSimulation {
 		ORC,
 		WIZARD,
 	}
-
+	
+	/**
+	 * Create a new combat simulation
+	 */
 	public CombatSimulation() {
 		this.mainMenu = new Menu("Select an action.");
 		this.mainMenu.addOption("Add a new character.", MenuSelection.ADD_CHARACTER);
@@ -51,6 +54,10 @@ public class CombatSimulation {
 		this.characters = MiddleEarthCouncil.getInstance().getCharacterManager();
 	}
 
+	/**
+	 * run():
+	 * Display the user interface for the combat simulation and respond to user input.
+	 */
 	public void run() {
 		while (true) {
 			var selection = (MenuSelection) this.mainMenu.prompt();
@@ -69,6 +76,7 @@ public class CombatSimulation {
 					this.deleteCharacter();
 					break;
 				case MenuSelection.ATTACK:
+					this.simulateBattleRound();
 					break;
 				case MenuSelection.EXIT:
 					return;
@@ -76,6 +84,12 @@ public class CombatSimulation {
 		}
 	}
 	
+	/**
+	 * getString()
+	 * @param prompt a string to display to the user when asking for input
+	 * @param allowEmpty whether or not to allow an empty string as a response
+	 * @return a single line string (that is non-empty is allowEmpty is false)
+	 */
 	private String getString(String prompt, boolean allowEmpty) {
 		var prompter = new Prompter(prompt, new Validator() {	
 			@Override
@@ -89,7 +103,13 @@ public class CombatSimulation {
 		return (String) prompter.prompt();
 	}
 
-	private double getNonNegativeDouble(String prompt, boolean allowEmpty) {
+	/**
+	 * getPositiveDouble():
+	 * @param prompt a string to display to the user when asking for input
+	 * @param allowEmpty whether or not to allow the user to skip the question
+	 * @return a non-negative double (zero if the question is skipped)
+	 */
+	private double getPositiveDouble(String prompt, boolean allowEmpty) {
 		var prompter = new Prompter(prompt, new Validator() {	
 			@Override
 			public Object validate(String line, Object invalid) {
@@ -113,6 +133,12 @@ public class CombatSimulation {
 		return (double) prompter.prompt();
 	}
 	
+	/**
+	 * getNaturalNumber()
+	 * @param prompt a string to display to the user to request input
+	 * @param allowEmpty whether or not to allow skipping of the question
+	 * @return a non-negative integer (zero if the question is skipped)
+	 */
 	private int getNaturalNumber(String prompt, boolean allowEmpty) {
 		var prompter = new Prompter(prompt, new Validator() {	
 			@Override
@@ -137,12 +163,18 @@ public class CombatSimulation {
 		return (int) prompter.prompt();
 	}
 	
-	private MiddleEarthCharacter getCharacter(String prompt) {
+	/**
+	 * getCharacter():
+	 * @param prompt a string to display to the user to request input
+	 * @param allowEmpty whether or not to allow the user to skip the question
+	 * @return a character (or null if the question is skipped)
+	 */
+	private MiddleEarthCharacter getCharacter(String prompt, boolean allowEmpty) {
 		this.characters.displayAllCharacters();
 		var prompter = new Prompter(prompt, new Validator() {
 			@Override
 			public Object validate(String line, Object invalid) {
-				if (line.length() == 0) {
+				if (line.length() == 0 && allowEmpty) {
 					return null; // Cancel (in case, for example, there are no characters)
 				}
 
@@ -157,10 +189,14 @@ public class CombatSimulation {
 		return (MiddleEarthCharacter) prompter.prompt();
 	}
 
+	/**
+	 * addCharacter():
+	 * allow the user to create a character
+	 */
 	private void addCharacter() {
 		var name = this.getString("Character name: ", false);
-		var health = this.getNonNegativeDouble("Character health: ", false);
-		var power = this.getNonNegativeDouble("Character power: ", false);
+		var health = this.getPositiveDouble("Character health: ", false);
+		var power = this.getPositiveDouble("Character power: ", false);
 		
 		var kin = (Kin) this.kinMenu.prompt();
 		
@@ -187,12 +223,21 @@ public class CombatSimulation {
 		this.characters.addCharacter(character);
 	}
 	
+	/**
+	 * viewCharacters():
+	 * allow the user to view all the characters
+	 */
 	private void viewCharacters() {
 		this.characters.displayAllCharacters();
 	}
-	
+
+	/**
+	 * updateCharacter():
+	 * allow the user to update a character by name (please note that because of the
+	 * assignment requirements the health and power must be overwritten with integers :(
+	 */
 	private void updateCharacter() {
-		var character = this.getCharacter("Enter the name of a character to update or nothing to cancel: ");
+		var character = this.getCharacter("Enter the name of a character to update or nothing to cancel: ", true);
 		
 		if (character == null) {
 			System.out.println("Action cancelled.");
@@ -211,8 +256,12 @@ public class CombatSimulation {
 		);
 	}
 	
+	/**
+	 * deleteCharacter():
+	 * allow the user to delete a character by name
+	 */
 	private void deleteCharacter() {
-		var character = this.getCharacter("Enter the name of a character to delete or nothing to cancel: ");
+		var character = this.getCharacter("Enter the name of a character to delete or nothing to cancel: ", true);
 		
 		if (character == null) {
 			System.out.println("Action cancelled.");
@@ -220,5 +269,38 @@ public class CombatSimulation {
 		}
 		
 		this.characters.deleteCharacter(character);
+	}
+
+	/**
+	 * simulateBattleRound():
+	 * allow the user to execute an attack between two characters
+	 */
+	private void simulateBattleRound() {
+		var attacker = this.getCharacter("Enter the name of a character to initiate an attack or nothing to cancel: ", true);
+		
+		if (attacker == null) {
+			System.out.println("Action cancelled.");
+			return;
+		}
+		
+		var attackee = this.getCharacter("Enter the name of a character to receive attack or nothing to cancel: ", true);
+		
+		if (attackee == null) {
+			System.out.println("Action cancelled.");
+			return;
+		}
+		
+		var success = attacker.attack(attackee);
+		if (success) {
+			System.out.println("Attack was effective!");
+			System.out.println(attackee.getName() + "'s health is now " + attackee.getHealth());
+		} else {
+			System.out.println("Attack was ineffective!");
+		}
+		
+		if (attackee.getHealth() <= 0) {
+			this.characters.deleteCharacter(attackee);
+			System.out.println("Removed dead character " + attackee.getName());
+		}
 	}
 }
