@@ -2,11 +2,15 @@ package edu.missouri.groupn.mem;
 
 import edu.missouri.groupn.mem.characters.MiddleEarthCharacter;
 
+/**
+ * This class contains an array of characters and an integer representing the size of the array.
+ * Each instance creates an array with an initial capacity of 5 and a size of 0.
+ */
 public class CharacterManager {
 	// creates a list of characters with an initial capacity of 5
 	protected ArrayList characters = new ArrayList(5);
 	protected int size = 0;
-	// size variable is also included in our custom ArrayList class!
+	// a size variable is also included in our custom ArrayList class
 	
 	/**
 	 * addCharacter():
