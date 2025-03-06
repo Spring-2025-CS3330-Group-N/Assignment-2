@@ -23,9 +23,7 @@ public abstract class MiddleEarthCharacter {
 	 * This method prints character details (name, health, and power).
 	 */
 	public void displayInfo() {
-		System.out.println("Name: " + this.name + " | Health: " + this.health + " | Power: " + this.power);
-//		System.out.println("Health: " + this.health);
-//		System.out.println("Power: " + this.power);
+		System.out.println("Name: " + this.name + " | " + this.getRace() + " | Health: " + this.health + " | Power: " + this.power);
 	}
 	
 	/**
