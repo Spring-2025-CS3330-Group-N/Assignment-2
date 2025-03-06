@@ -15,11 +15,19 @@ public class CharacterManager {
 	 * @return True if addition is successful, otherwise return False
 	 */
 	public boolean addCharacter(MiddleEarthCharacter c) {
-		// check for duplicate entry?
-		
+		// search array for duplicate entry
+		for (int i=0; i<this.characters.getSize(); i++) {
+			// cast MiddleEarthCharacter type
+			var existingChar = (MiddleEarthCharacter) this.characters.at(i);
+
+			// check for duplicate
+			if (existingChar.equals(c) && (existingChar.getRace() == c.getRace())) {
+				System.out.println("Character addition failed. Cannot add characters that already exist in the system.\n");
+				return false;
+			}
+		}
 		// push() method includes conditions for dynamic array resizing
 		this.characters.push(c); 
-		
 		this.size++;
 		System.out.println("Success! " + c + " added to the system.");
 		return true;
@@ -28,13 +36,13 @@ public class CharacterManager {
 	/**
 	 * getCharacter():
 	 * This method retrieves a character associated with the name argument provided from the character management system.
+	 * If there is more than one character with the same name in the system, from the eligible characters it will return the instance that was added to the system first.
 	 * @param name Character name
-	 * @return the requested MiddleEarthCharacter upon success, otherwise return null
+	 * @return Requested character upon success, otherwise return null
 	 */
 	public MiddleEarthCharacter getCharacter(String name) {
 		System.out.println("\nSearching for " + name + "...");
 		
-		// change how we get size here?
 		for (int i=0; i<this.characters.getSize(); i++) {
 			// must cast MiddleEarthCharacter type here to use getter methods from that class
 			var character = (MiddleEarthCharacter) this.characters.at(i);
@@ -49,7 +57,6 @@ public class CharacterManager {
 	}
 	
 	/**
-	 * updateCharacter():
 	 * This method updates a given character with the passed argument values.
 	 * @param character Character to be updated
 	 * @param name Character name
@@ -58,6 +65,9 @@ public class CharacterManager {
 	 * @return True upon successful change, returns False if there is no change or if the character does not exist
 	 */
 	public boolean updateCharacter(MiddleEarthCharacter character, String name, int health, int power) {
+		System.out.println("Character to be updated: ");
+		character.displayInfo();
+		
 		// search character management system for the given character
 		// find() returns the index
 		var charIndex = this.characters.find(character);
@@ -75,7 +85,6 @@ public class CharacterManager {
 			if (! existingCharacter.getName().equals(name)) {
 				uniqueVal = true;
 				existingCharacter.setName(name);
-//				((MiddleEarthCharacter) this.characters.at(charIndex)).setName(name);
 			}
 			// check for unique health level
 			if (existingCharacter.getHealth() != health) {
@@ -102,6 +111,33 @@ public class CharacterManager {
 			}
 		}
 		System.out.print(character + " was not found. You must add characters to the system before you can update them.\n");
+		return false;
+	}
+	
+	/**
+	 * This method deletes a given character and shifts character array elements accordingly.
+	 * @param character Character to be deleted
+	 * @return True upon successful deletion, false if the character is not in the array
+	 */
+	public boolean deleteCharacter(MiddleEarthCharacter character) {
+		System.out.println("Character to be deleted:");
+		character.displayInfo();
+		
+		// search array for given character
+		for (int i=0; i<this.characters.getSize(); i++) {
+			// cast MiddleEarthCharacter type
+			var characterToDelete = (MiddleEarthCharacter) this.characters.at(i);
+			
+			// check for a match
+			if (characterToDelete.equals(character)) {
+				// pop() method deletes character at the given index and shifts array elements
+				this.characters.pop(i);
+				this.size--;
+				System.out.println("Character successfully deleted!\n");
+				return true;
+			}
+		}
+		System.out.println("Character not found. You must add characters to the system before you can delete them.\n");
 		return false;
 	}
 	
