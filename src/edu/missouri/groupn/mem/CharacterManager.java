@@ -172,4 +172,13 @@ public class CharacterManager {
 			}
 		}
 	}
+	
+	public ArrayList getCharacterNames() {
+		var names = new ArrayList();
+		for (var i = 0; i < this.characters.getSize(); ++i) {
+			var character = (MiddleEarthCharacter) this.characters.at(i);
+			names.push(character.getName());
+		}
+		return names;
+	}
 }

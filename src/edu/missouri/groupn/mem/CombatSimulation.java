@@ -276,20 +276,18 @@ public class CombatSimulation {
 	 * allow the user to execute an attack between two characters
 	 */
 	private void simulateBattleRound() {
-		var attacker = this.getCharacter("Enter the name of a character to initiate an attack or nothing to cancel: ", true);
-		
-		if (attacker == null) {
-			System.out.println("Action cancelled.");
-			return;
+		var names = this.characters.getCharacterNames();
+		for (var i = 0; i < names.getSize(); ++i) {
+			var j = (i + 1) % names.getSize();
+			var attackerName = (String) names.at(i);
+			var attackeeName = (String) names.at(j);
+			var attacker = this.characters.getCharacter(attackerName);
+			var attackee = this.characters.getCharacter(attackeeName);
+			this.executeAttack(attacker, attackee);
 		}
-		
-		var attackee = this.getCharacter("Enter the name of a character to receive attack or nothing to cancel: ", true);
-		
-		if (attackee == null) {
-			System.out.println("Action cancelled.");
-			return;
-		}
-		
+	}
+	
+	private void executeAttack(MiddleEarthCharacter attacker, MiddleEarthCharacter attackee) {
 		var success = attacker.attack(attackee);
 		if (success) {
 			System.out.println("Attack was effective!");
