@@ -63,8 +63,10 @@ public class CombatSimulation {
 					this.viewCharacters();
 					break;
 				case MenuSelection.UPDATE_CHARACTER:
+					this.updateCharacter();
 					break;
 				case MenuSelection.DELETE_CHARACTER:
+					this.deleteCharacter();
 					break;
 				case MenuSelection.ATTACK:
 					break;
@@ -74,40 +76,91 @@ public class CombatSimulation {
 		}
 	}
 	
-	private String getString(String prompt) {
+	private String getString(String prompt, boolean allowEmpty) {
 		var prompter = new Prompter(prompt, new Validator() {	
 			@Override
-			public Object validate(String line) {
+			public Object validate(String line, Object invalid) {
+				if (line.length() == 0 && !allowEmpty) {
+					return invalid;
+				}
 				return line;
 			}
 		});
 		return (String) prompter.prompt();
 	}
 
-	private double getNonNegative(String prompt) {
+	private double getNonNegativeDouble(String prompt, boolean allowEmpty) {
 		var prompter = new Prompter(prompt, new Validator() {	
 			@Override
-			public Object validate(String line) {
+			public Object validate(String line, Object invalid) {
+				if (line.length() == 0 && allowEmpty) {
+					return 0.;
+				}
+				
 				double number;
 				try {
 					number = Double.parseDouble(line);
 				} catch (NumberFormatException e) {
-					return null;
+					return invalid;
 				}
 				
 				if (number <= 0) {
-					return null;
+					return invalid;
 				}
 				return number;
 			}
 		});
 		return (double) prompter.prompt();
 	}
+	
+	private int getNaturalNumber(String prompt, boolean allowEmpty) {
+		var prompter = new Prompter(prompt, new Validator() {	
+			@Override
+			public Object validate(String line, Object invalid) {
+				if (line.length() == 0 && allowEmpty) {
+					return 0;
+				}
+				
+				int number;
+				try {
+					number = Integer.parseInt(line);
+				} catch (NumberFormatException e) {
+					return invalid;
+				}
+				
+				if (number <= 0) {
+					return invalid;
+				}
+				return number;
+			}
+		});
+		return (int) prompter.prompt();
+	}
+	
+	private MiddleEarthCharacter getCharacter(String prompt) {
+		this.characters.displayAllCharacters();
+		var prompter = new Prompter(prompt, new Validator() {
+			@Override
+			public Object validate(String line, Object invalid) {
+				if (line.length() == 0) {
+					return null; // Cancel (in case, for example, there are no characters)
+				}
+
+				var character = characters.getCharacter(line);
+				if (character != null) {
+					return character;
+				}
+				return invalid;
+			}
+		});
+		
+		return (MiddleEarthCharacter) prompter.prompt();
+	}
 
 	private void addCharacter() {
-		var name = this.getString("Character name: ");
-		var health = this.getNonNegative("Character health: ");
-		var power = this.getNonNegative("Character power: ");
+		var name = this.getString("Character name: ", false);
+		var health = this.getNonNegativeDouble("Character health: ", false);
+		var power = this.getNonNegativeDouble("Character power: ", false);
 		
 		var kin = (Kin) this.kinMenu.prompt();
 		
@@ -136,5 +189,36 @@ public class CombatSimulation {
 	
 	private void viewCharacters() {
 		this.characters.displayAllCharacters();
+	}
+	
+	private void updateCharacter() {
+		var character = this.getCharacter("Enter the name of a character to update or nothing to cancel: ");
+		
+		if (character == null) {
+			System.out.println("Action cancelled.");
+			return;
+		}
+		
+		var name = this.getString("Character name (or nothing): ", true);
+		var health = this.getNaturalNumber("Character health (or nothing): ", true);
+		var power = this.getNaturalNumber("Character power (or nothing): ", true);
+		
+		this.characters.updateCharacter(
+			character,
+			(name.length() == 0)? character.getName() : name,
+			(health == 0)? (int) Math.round(character.getHealth()) : health,
+			(power == 0)? (int) Math.round(character.getPower()) : power
+		);
+	}
+	
+	private void deleteCharacter() {
+		var character = this.getCharacter("Enter the name of a character to delete or nothing to cancel: ");
+		
+		if (character == null) {
+			System.out.println("Action cancelled.");
+			return;
+		}
+		
+		this.characters.deleteCharacter(character);
 	}
 }
